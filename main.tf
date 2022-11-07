@@ -120,12 +120,6 @@ resource "aws_s3_bucket" "b" {
   bucket   = "bolt-sre-test-private-bucket"
 }
 
-resource "aws_s3_bucket_acl" "private" {
-  provider = aws.lawhaxx
-  bucket   = aws_s3_bucket.b.id
-  acl      = "private"
-}
-
 resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
   provider = aws.lawhaxx
   bucket   = aws_s3_bucket.b.id
