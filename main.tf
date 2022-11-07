@@ -17,7 +17,7 @@ resource "aws_cloudfront_origin_access_identity" "s3_access" {
 }
 
 resource "aws_acm_certificate" "cert" {
-  provider          = aws.personal-us-east-1
+  provider          = aws.personal
   domain_name       = var.cname
   validation_method = "DNS"
 
@@ -63,7 +63,7 @@ resource "aws_route53_record" "redirect_to_cloudfront" {
 }
 
 resource "aws_acm_certificate_validation" "default" {
-  provider                = aws.personal-us-east-1
+  provider                = aws.personal
   certificate_arn         = aws_acm_certificate.cert.arn
   validation_record_fqdns = [for record in aws_route53_record.validation : record.fqdn]
 }
