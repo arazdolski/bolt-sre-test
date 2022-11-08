@@ -1,6 +1,6 @@
 provider "aws" {
-  alias = "lawhaxx"
-  profile = "lawhaxx"
+  alias = "account_2"
+  profile = "account_2"
 
   default_tags {
     tags = {
@@ -10,8 +10,8 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias = "personal"
-  profile = "personal"
+  alias = "account_1"
+  profile = "account_1"
   region = "us-east-1"
 
   default_tags {

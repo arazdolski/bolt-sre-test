@@ -12,12 +12,12 @@ locals {
 }
 
 resource "aws_cloudfront_origin_access_identity" "s3_access" {
-  provider = aws.personal
+  provider = aws.account_1
   comment  = "Restrict access to S3 Content"
 }
 
 resource "aws_acm_certificate" "cert" {
-  provider          = aws.personal
+  provider          = aws.account_1
   domain_name       = var.cname
   validation_method = "DNS"
 
@@ -27,12 +27,12 @@ resource "aws_acm_certificate" "cert" {
 }
 
 resource "aws_route53_zone" "primary" {
-  provider = aws.personal
+  provider = aws.account_1
   name     = var.cname
 }
 
 resource "aws_route53_record" "validation" {
-  provider = aws.personal
+  provider = aws.account_1
   for_each = {
     for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
@@ -50,7 +50,7 @@ resource "aws_route53_record" "validation" {
 }
 
 resource "aws_route53_record" "redirect_to_cloudfront" {
-  provider = aws.personal
+  provider = aws.account_1
   zone_id  = aws_route53_zone.primary.zone_id
   name     = var.cname
   type     = "A"
@@ -63,13 +63,13 @@ resource "aws_route53_record" "redirect_to_cloudfront" {
 }
 
 resource "aws_acm_certificate_validation" "default" {
-  provider                = aws.personal
+  provider                = aws.account_1
   certificate_arn         = aws_acm_certificate.cert.arn
   validation_record_fqdns = [for record in aws_route53_record.validation : record.fqdn]
 }
 
 resource "aws_cloudfront_distribution" "s3_content" {
-  provider = aws.personal
+  provider = aws.account_1
   enabled  = true
 
   origin {
@@ -116,12 +116,12 @@ resource "aws_cloudfront_distribution" "s3_content" {
 }
 
 resource "aws_s3_bucket" "private" {
-  provider = aws.lawhaxx
+  provider = aws.account_2
   bucket   = "bolt-sre-test-bucket"
 }
 
 resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
-  provider = aws.lawhaxx
+  provider = aws.account_2
   bucket   = aws_s3_bucket.private.id
   policy   = data.aws_iam_policy_document.allow_access_from_another_account.json
 }
