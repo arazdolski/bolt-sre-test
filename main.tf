@@ -73,7 +73,7 @@ resource "aws_cloudfront_distribution" "s3_content" {
   enabled  = true
 
   origin {
-    domain_name = aws_s3_bucket.b.bucket_regional_domain_name
+    domain_name = aws_s3_bucket.private.bucket_regional_domain_name
     origin_id   = local.s3_origin_id
 
     s3_origin_config {
@@ -115,14 +115,14 @@ resource "aws_cloudfront_distribution" "s3_content" {
   }
 }
 
-resource "aws_s3_bucket" "b" {
+resource "aws_s3_bucket" "private" {
   provider = aws.lawhaxx
-  bucket   = "bolt-sre-test-private-bucket"
+  bucket   = "bolt-sre-test-bucket"
 }
 
 resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
   provider = aws.lawhaxx
-  bucket   = aws_s3_bucket.b.id
+  bucket   = aws_s3_bucket.private.id
   policy   = data.aws_iam_policy_document.allow_access_from_another_account.json
 }
 
@@ -135,7 +135,7 @@ data "aws_iam_policy_document" "allow_access_from_another_account" {
     ]
 
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.b.bucket}/*",
+      "arn:aws:s3:::${aws_s3_bucket.private.bucket}/*",
     ]
 
     principals {
