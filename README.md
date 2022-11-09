@@ -8,7 +8,7 @@ Please pay attention that S3 bucket is hosted on the separate AWS account. To al
 
 When CloudFront distribution has access to S3, content can be delivered to a client. If the content is already in the edge location, then CloudFront immediately delivers it, otherwise retrieves it from S3.
 
-Route 53 zone and records are being created to validate the certificate and then ACM returns valid certificate until next year issued by Amazon.
+Route 53 zone and records are being created to validate the certificate and then ACM returns valid certificate until next year issued by Amazon. A record is needed to redirect requests from an alternate domain to CloudFront.
 
 ![Architecture diagram](/images/bolt-sre-task-diagram.drawio.svg)
 
